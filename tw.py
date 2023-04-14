@@ -5,6 +5,7 @@ from twisted.internet import reactor, endpoints
 import cgi
 import sys
 import re
+import time
 
 from xml.dom.minidom import parse, parseString
 
@@ -41,14 +42,24 @@ class Counter(resource.Resource):
             print ("Found cf.fsm.partnerNotResponding")
 
 
-            req = '{"node": "azurecvoha-01", "dump": true}'
+            print ("Initiating core dump on bad node")
+            req = '{"node": "azurecvoha-01", "dump": true, "ignore-quorum-warnings":true, "skip-lif-migration-before-reboot":true}'
             url = 'https://172.16.1.12/api/private/cli/system/node/reboot?privilege_level=advanced'
 
 
             x = requests.post(url, data = req, auth = ('admin','Netapp1!'), verify=False)
 
-            print (x)
+            print (x.text)
 
+            print ("Sleeping for 5 seconds before initiating core dump good node")
+            time.sleep(5)
+
+            print ("Initiating core dump on good node")
+    
+            req = '{"node": "azurecvoha-02", "dump": true, "ignore-quorum-warnings":true, "skip-lif-migration-before-reboot":true}'
+            x = requests.post(url, data = req, auth = ('admin','Netapp1!'), verify=False)
+
+            print (x.text)
 
         else:
             print ("not the one we're looking for")
