@@ -25,7 +25,6 @@ import base64
 import argparse
 import logging
 from getpass import getpass
-#import texttable as tt
 import requests
 import urllib3 as ur
 ur.disable_warnings()
@@ -119,11 +118,7 @@ if __name__ == "__main__":
         'accept': "application/json"
     }
     
-
-
-#    inode2path(ARGS.cluster, headers, "norton", "kenny_iso", "96")
-    
-    volume = ''
+    pathFile = open(ARGS.output_file, "w")
 
     with open(ARGS.input_file, 'r') as ndmpFile:
         for line in ndmpFile:
@@ -137,4 +132,6 @@ if __name__ == "__main__":
             if (x):
                 inode = x.group(1)
                 path = inode2path(ARGS.cluster, headers, vserver, volume, inode)
-                print (inode + "," + path)
+                print (inode + "," + path, file=pathFile)
+
+    pathFile.close()
