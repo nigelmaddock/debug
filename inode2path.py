@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """
 ONTAP REST API Sample Scripts
 
@@ -132,6 +131,7 @@ if __name__ == "__main__":
             if (x):
                 inode = x.group(1)
                 path = inode2path(ARGS.cluster, headers, vserver, volume, inode)
-                print (inode + "," + path, file=pathFile)
+                if (path != None):
+                    print (inode + "," + path, file=pathFile)
 
     pathFile.close()
